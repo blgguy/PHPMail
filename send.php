@@ -8,41 +8,57 @@ use PHPMailer\PHPMailer\Exception;
 // Load Composer's autoloader
 require 'vendor/autoload.php';
 
-// Instantiation and passing `true` enables exceptions
-$mail = new PHPMailer(true);
+// Base files 
+//require 'PHPMailer/src/Exception.php';
+//require 'PHPMailer/src/PHPMailer.php';
+//require 'PHPMailer/src/SMTP.php';
+
+// create object of PHPMailer class with boolean parameter which sets/unsets exception.
+
+$mail = new PHPMailer(true);                              
 
 try {
-    //Server settings
-    $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
-    $mail->isSMTP();                                            // Send using SMTP
-    $mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
-    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-    $mail->Username   = 'your email';                     // SMTP username
-    $mail->Password   = 'your email password';                               // SMTP password
-   // $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
-    $mail->SMTPSecure = 'tls';
-    $mail->Port       = 587;                                    // TCP port to connect to
 
-    //Recipients
-    $mail->setFrom('bulanguinnovations@gmail.com', 'Bulangu Innovation');
-    $mail->addAddress('learner0016@gmail.com', 'learner');     // Add a recipient
-    //$mail->addAddress('ellen@example.com');               // Name is optional
-    $mail->addReplyTo('bulanguinnovations@gmail.com', 'Information');
-    //$mail->addCC('cc@example.com');
-    //$mail->addBCC('bcc@example.com');
+    //server settings...
+    $mail->isSMTP(); // using SMTP protocol     
+                                
+    $mail->Host = 'smtp.gmail.com'; // SMTP host as gmail 
+    $mail->SMTPAuth = true;  // enable smtp authentication                             
+    $mail->Username = 'your@email.com';  // sender email             
+    $mail->Password = '**********'; // sender email  password                          
+    $mail->SMTPSecure = 'tls';  // for encrypted connection                           
+    $mail->Port = 587;   // port for SMTP     
+    $mail->SMTPOptions = array(
+                'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+                )
+    );
 
+    //recipients..
+    $mail->setFrom("your@email.com", "sender name optional"); // sender's email and name
+    $mail->addAddress($Email, $FirstName);  // receiver's email and name
+    $mail->addReplyTo('replyyour@email.com');
+    //$mail->addCC('your@email.com');
+    $mail->addBCC('bbcyour@email.com'); // if add email recipeints will not no that a copy is send
+
+    //contents..
+    $mail->isHTML(true);
+    $mail->Subject = 'Mail Subject e.g account verification';
+    $mail->Body    = 'Hi Sir <br><br><br> below is your activation key <br><button>ggiygvih6</button><br> 
+        <footer>your footer</footer>';
+    //convert HTML into a basic plain-text alternative body..
+    //$mail->msgHTML(file_get_contents('contents.html'), __DIR__);
+    //$mail->AltBody    = "Every thing is possible in this world"; // for non-html mail clients.
+    
     // Attachments
-    //$mail->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
-    //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
-
-    // Content
-    $mail->isHTML(true);                                  // Set email format to HTML
-    $mail->Subject = 'Here is the subject';
-    $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
-    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
+   // $mail->addAttachment("img.jpg);
+    // $mail->addAttachment("img2.jpg, kkk.jpg);
     $mail->send();
-    echo 'Message has been sent';
-} catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}catch (Exception $e)
+ {
+  // handle error.
+    echo 'having some issues sending mail'; 
 }
+?>
